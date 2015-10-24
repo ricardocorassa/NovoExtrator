@@ -21,11 +21,11 @@ public class Transicao {
 
     public Transicao(String acorde, String prox) {
         //System.out.println(acorde + " - " + prox);
-        this.acorde = new Acorde("");
+        //this.acorde = new Acorde();
         this.acorde.setAcorde(acorde);
         this.acorde.setCont(0);
         
-        this.prox = new Acorde("");
+        //this.prox = new Acorde();
         this.prox.setAcorde(prox);
         this.prox.setCont(0);
     }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Data {
 
     private String classe;
-    private ArrayList<Acorde> dados;
+    private ArrayList<String> dados;
 
     void Data() {
         classe = "";
@@ -39,14 +39,14 @@ public class Data {
     /**
      * @return the dados
      */
-    public ArrayList<Acorde> getDados() {
+    public ArrayList<String> getDados() {
         return dados;
     }
 
     /**
      * @param dados the dados to set
      */
-    public void setDados(ArrayList<Acorde> dados) {
+    public void setDados(ArrayList<String> dados) {
         this.dados = dados;
     }
 

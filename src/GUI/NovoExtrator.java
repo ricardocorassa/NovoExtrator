@@ -32,7 +32,8 @@ public class NovoExtrator {
         
         for (int i = 0; i < fList.length; i++) {
             Musica musica = new Musica(fList[i]);
-            musica.extraiCaracteristicas();
+            musica.extraiAcordes();
+            musica.geraFreq();
             musicas.add(musica);
         }
 

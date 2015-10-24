@@ -10,14 +10,14 @@ package Acorde;
  * @author ricardo
  */
 public class Acorde {
+
     private String acorde;
     private int cont;
     private double freq;
 
-    public Acorde(String acorde) {
+    public Acorde(String acorde, int cont) {
         this.acorde = acorde;
-        this.cont = 0;
-        this.freq = 0;
+        this.cont = cont;
     }
 
     /**
@@ -46,6 +46,10 @@ public class Acorde {
      */
     public void setCont(int cont) {
         this.cont = cont;
+    }
+
+    public void addCont() {
+        this.cont++;
     }
 
     /**

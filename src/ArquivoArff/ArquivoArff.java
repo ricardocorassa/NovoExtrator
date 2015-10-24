@@ -24,13 +24,13 @@ public class ArquivoArff {
     private String relations;
     private ArrayList<String> atributes;
     private ArrayList<String> classe;
-    private ArrayList<Data> dataList;
+    private ArrayList<ArrayList<String>> dataList;
 
     public ArquivoArff(String relations) {
         this.relations = relations;
         classe = new ArrayList<String>();
         atributes = new ArrayList<String>();
-        dataList = new ArrayList<Data>();
+        dataList = new ArrayList<ArrayList<String>>();
     }
 
     /*
@@ -45,11 +45,10 @@ public class ArquivoArff {
 
             //escreve o relations
             writer.write("@RELATION\t" + relations + "\n");
-            System.out.println(relations);
-            
+            //System.out.println(relations);
+
             //escreve os atributos
             for (int i = 0; i < atributes.size(); i++) {
-                System.out.println(atributes.get(i));
                 writer.write("@ATTRIBUTE\t" + atributes.get(i) + "\tNUMERIC\n");
             }
 
@@ -66,17 +65,15 @@ public class ArquivoArff {
             //escreve os dados
             writer.write("@DATA\n");
             for (int i = 0; i < dataList.size(); i++) {
-                ArrayList<Acorde> dados = dataList.get(i).getDados();
-                for (int j = 0; j < dados.size() - 1; j++) {
-                    //se for o primeiro escrever somente
-                    if (j == 0) {
-                        writer.write(dados.get(j).getAcorde());
+                for (int j = 0; j < dataList.get(i).size(); j++) {
+                    if (j == 0) {//se for o primeiro escrever somente
+                        System.out.println(dataList.get(i).get(j));
+                        writer.write(dataList.get(i).get(j));
                     } else { //para os demais, escreve uma virgula antes
-                        writer.write("," + dados.get(j));
+                        writer.write("," + dataList.get(i).get(j));
                     }
                 }
-                //escrever no final da linha a classe que ele pertence
-                writer.write("," + dataList.get(i).getClasse() + "\n");
+                writer.write("\n");
             }
         }
     }
@@ -110,24 +107,18 @@ public class ArquivoArff {
 
                 while (linha != null) {
 
-                    Data data = new Data(); /*cria um valor para armazenar os dados e 
-                     *a classe final, assim faz uma matris de array por array*/
-
+                    //Data data = new Data(); /*cria um valor para armazenar os dados e 
+                    //*a classe final, assim faz uma matris de array por array*/
                     ArrayList<String> data_val = new ArrayList<>();
 
                     String[] aDados = linha.split(",");
 
                     for (int k = 0; k < aDados.length; k++) {
-                        if (classe.contains(aDados[k])) {
-                            data.setClasse(aDados[k]);
-                        } else {
-                            data_val.add(aDados[k]);
-                        }
+                        data_val.add(aDados[k]);
                     }
-                    //data.setDados(data_val);
-                    data_val = null;
+                    addDados(data_val);
 
-                    dataList.add(data);
+                    data_val = null;
 
                     linha = arquivo.readLine();
                 }
@@ -146,8 +137,7 @@ public class ArquivoArff {
     /*
      * adidionar os dados do arquivo Arff
      */
-    public void addDados(Data data) {
-        //System.out.println(dado);
+    public void addDados(ArrayList<String> data) {
         this.dataList.add(data);
     }
 
@@ -207,14 +197,14 @@ public class ArquivoArff {
     /**
      * @return the dados
      */
-    public ArrayList<Data> getDados() {
+    public ArrayList<ArrayList<String>> getDados() {
         return dataList;
     }
 
     /**
      * @param dados the dados to set
      */
-    public void setDados(ArrayList<Data> data) {
+    public void setDados(ArrayList<ArrayList<String>> data) {
         this.dataList = data;
     }
 

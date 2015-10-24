@@ -7,6 +7,8 @@ package Musica;
 
 import Acorde.Acorde;
 import ArquivoArff.ArquivoArff;
+import static Musica.Musicas.acordes;
+import static Musica.Musicas.subAcordes;
 import Transicoes.Transicao;
 import Transicoes.Transicoes;
 import java.io.BufferedReader;
@@ -15,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -26,10 +29,17 @@ import java.util.ArrayList;
 public class Musica {
 
     private File arquivo;
+
     private String nome;
+
     private String classe;
+
     private Acorde Tom;
-    private ArrayList<Acorde> acordes;
+
+    /**
+     * Acordes da musica
+     */
+    private ArrayList<String> acordesDaMusica;
 
     /**
      * Vetor de transiçoes possiveis/
@@ -52,6 +62,11 @@ public class Musica {
     private static String[] base_acordes = {"DO", "RE", "MI", "FA", "SOL", "LA", "SI", "C", "D", "E", "F", "G", "A", "B", "m", "b", "#", "4", "5", "7", "9", "º", "6", "/",
         "(", ")", "13", "11", "sus", "maj", "dim", "+", "x |", "X2"};
 
+    public static String basacordes[] = {"C", "D", "E", "F", "G", "A", "B"};
+    public static String subAcordes[] = {"", " ", "m", "#", "b", "4", "5", "7", "9", "°"};
+
+    private ArrayList<Acorde> acordesFreq;
+
     public Musica(File arquivo) {
         /**
          * Inicializar todas as variaveis
@@ -62,93 +77,68 @@ public class Musica {
 
         this.nome = arquivo.getPath().replace(arquivo.getParent() + "/", "").replace(".txt", "");
 
-        this.Tom = new Acorde("");
+        this.Tom = new Acorde("", 0);
 
-        this.acordes = new ArrayList<Acorde>();
+        this.acordesDaMusica = new ArrayList<String>();
 
         this.transicoes = new ArrayList<Transicao>();
 
         this.transicoes_musica = new ArrayList<Transicao>();
 
+        this.acordesFreq = new ArrayList<Acorde>();
+
         /*Cria a base de acordes*/
         this.acordes_anlise_list = new ArrayList<String>();
-        for (int i = 1; i < base_acordes.length - 1; i++) {
-            acordes_anlise_list.add(base_acordes[i]);
+        for (int l = 0; l < basacordes.length; l++) {
+            for (int k = 0; k < subAcordes.length; k++) {
+                acordes_anlise_list.add(basacordes[l] + subAcordes[k]);
+            }
         }
 
     }
 
-    public void extraiCaracteristicas() throws FileNotFoundException, IOException {
+    public void extraiAcordes() throws FileNotFoundException, IOException {
 
         BufferedReader input = new BufferedReader(new FileReader(this.getArquivo()));
         String linha = input.readLine();
-
+        //System.out.println(this.nome);
+        String linas_acordes = "";
         while (linha != null) {
             if (eAcorde(linha)) {
-                String linha_split[] = linha.split(" ");
-                for (int i = 0; i < linha_split.length; i++) {
-                    String pos = linha_split[i].replace(" ", "");
-                    System.out.println(pos);
-                    if (i < linha_split.length - 1) {
-                        /*Adiciona as transiçoes da musica*/
-                        transicoes_musica.add(new Transicao(pos, linha_split[i + 1].replace(" ", "")));
-                    }
-                    if (acordes_anlise_list.contains(pos)) {
-                        if (!acordes.contains(pos)) {
-                            Acorde acr = new Acorde(pos);
-                            acr.setCont(1);
-                            getAcordes().add(acr);
-                        } else {
-                            int cont = getAcordes().get(getAcordes().indexOf(pos)).getCont();
-                            Acorde newAcorcde = new Acorde(getAcordes().get(getAcordes().indexOf(pos)).getAcorde());
-                            newAcorcde.setCont(cont++);
-                            getAcordes().set(getAcordes().indexOf(pos), newAcorcde);
-                        }
-                    }
-                }
+                linas_acordes += linha;
             }
             linha = input.readLine();
         }
-        /**
-         * Determina o tom como acorde que aparece o numero maior de vezes
-         */
-        int cont_total_acordes = 0;
 
-        for (int i = 0; i < acordes.size(); i++) {
-            cont_total_acordes += acordes.get(i).getCont();/*conta o total de acordes*/
+        String linha_split[] = linas_acordes.split(" ");
+        for (int i = 0; i < linha_split.length; i++) {
+            String pos = linha_split[i].replaceAll(" ", "");
+            //System.out.println("["+pos+"]");
+            if (acordes_anlise_list.contains(pos)) {
+                acordesDaMusica.add(pos);
+            }
+        }
+    }
 
-            if (i == 0) {
-                this.Tom = acordes.get(i);
-            } else {
-                if (acordes.get(i).getCont() > this.Tom.getCont()) {
-                    this.Tom = acordes.get(i);//armazena o valor maio do tom;
+    public void geraFreq() {
+
+        int cont = 1;
+
+        for (int i = 0; i < acordesDaMusica.size(); i++) {
+            for (int k = 0; k < acordesDaMusica.size(); k++) {
+                if (acordesDaMusica.get(k).equals(acordesDaMusica.get(i))) {
+                    cont++;
+                    //acordesDaMusica.remove(k);
                 }
             }
-        }
-        if (this.Tom.getAcorde() == "") {
-            System.out.println("Tom vazio");
-        }
-        
-        /**
-         * Adionas as frequencia as musicas
-         */
-        for (int i = 0; i < acordes.size(); i++) {
-            System.out.println(nome + " " +acordes.get(i).getAcorde()+" "+acordes.get(i).getCont());
-            if (cont_total_acordes != 0) {
-                acordes.get(i).setFreq(acordes.get(i).getCont() / cont_total_acordes);
-            }
+            Acorde acorde = new Acorde(acordesDaMusica.get(i), cont);
+            getAcordesFreq().add(acorde);
+            cont = 1;
         }
 
-        /**
-         * Cria as transiçoes de base
-         */
-        for (int i = 0; i < base_acordes.length - 1; i++) {
-            for (int j = i; j < base_acordes.length; j++) {
-                Transicoes transicoes = new Transicoes();
-                this.transicoes = transicoes.getTransicoes(arquivo);
-            }
-        }
-
+//        for (int i = 0; i < getAcordesFreq().size(); i++) {
+//            System.out.println("\t" + getAcordesFreq().get(i).getAcorde() + " " + getAcordesFreq().get(i).getCont());
+//        }
     }
 
     public static boolean eAcorde(String linha) {
@@ -242,15 +232,29 @@ public class Musica {
     /**
      * @return the acordes
      */
-    public ArrayList<Acorde> getAcordes() {
-        return acordes;
+    public ArrayList<String> getAcordes() {
+        return acordesDaMusica;
     }
 
     /**
      * @param acordes the acordes to set
      */
-    public void setAcordes(ArrayList<Acorde> acordes) {
-        this.acordes = acordes;
+    public void setAcordes(ArrayList<String> acordes) {
+        this.acordesDaMusica = acordes;
+    }
+
+    /**
+     * @return the acordesFreq
+     */
+    public ArrayList<Acorde> getAcordesFreq() {
+        return acordesFreq;
+    }
+
+    /**
+     * @param acordesFreq the acordesFreq to set
+     */
+    public void setAcordesFreq(ArrayList<Acorde> acordesFreq) {
+        this.acordesFreq = acordesFreq;
     }
 
 }
