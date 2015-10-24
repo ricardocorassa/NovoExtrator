@@ -23,21 +23,26 @@ public class NovoExtrator {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
 
-        File raiz = new File("/home/ricardo/Área de Trabalho/Cifras/alegria/");
-        File fList[] = raiz.listFiles();
-        
         Musicas musicas = new Musicas();
-        
-        System.out.println("Musicas a serem analisadas : " + fList.length);
-        
-        for (int i = 0; i < fList.length; i++) {
-            Musica musica = new Musica(fList[i]);
-            musica.extraiAcordes();
-            musica.geraFreq();
-            musicas.add(musica);
+        String[] pastas = {"alegria", "amor", "decepcao", "entusiasmo", "paixao", "tristeza"};
+
+        for (int i = 0; i < pastas.length; i++) {
+            String pasta = "/home/ricardo/Área de Trabalho/Cifras/" + pastas[i] + "/";
+            File raiz = new File(pasta);
+            File fList[] = raiz.listFiles();
+            System.out.println("Musicas a serem analisadas : " + fList.length);
+            for (int j = 0; j < fList.length; j++) {
+                System.out.println(fList[j]);
+                Musica musica = new Musica(fList[j]);
+                musica.extraiAcordes();
+                musica.geraFreq();
+                musicas.add(musica);
+            }
+
         }
 
         musicas.toArffFrequencia();
+        musicas.toArffPresenca();
 
         /*for (int i = 0; i < mscs.size(); i++) {
          //System.out.println(musicas.get(i).getNome()+ " " + musicas.get(i).getTom());

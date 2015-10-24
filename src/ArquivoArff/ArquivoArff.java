@@ -67,7 +67,6 @@ public class ArquivoArff {
             for (int i = 0; i < dataList.size(); i++) {
                 for (int j = 0; j < dataList.get(i).size(); j++) {
                     if (j == 0) {//se for o primeiro escrever somente
-                        System.out.println(dataList.get(i).get(j));
                         writer.write(dataList.get(i).get(j));
                     } else { //para os demais, escreve uma virgula antes
                         writer.write("," + dataList.get(i).get(j));

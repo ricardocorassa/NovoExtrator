@@ -34,7 +34,7 @@ public class Musica {
 
     private String classe;
 
-    private Acorde Tom;
+    private String Tom;
 
     /**
      * Acordes da musica
@@ -77,7 +77,7 @@ public class Musica {
 
         this.nome = arquivo.getPath().replace(arquivo.getParent() + "/", "").replace(".txt", "");
 
-        this.Tom = new Acorde("", 0);
+        this.Tom = "";
 
         this.acordesDaMusica = new ArrayList<String>();
 
@@ -139,6 +139,15 @@ public class Musica {
 //        for (int i = 0; i < getAcordesFreq().size(); i++) {
 //            System.out.println("\t" + getAcordesFreq().get(i).getAcorde() + " " + getAcordesFreq().get(i).getCont());
 //        }
+    }
+    
+    public void geraTom(){
+        int cont = 0;
+        for (int i = 0; i < acordesFreq.size(); i++) {
+            if(acordesFreq.get(i).getCont() > cont){
+                this.Tom = acordesFreq.get(i).getAcorde();
+            }            
+        }
     }
 
     public static boolean eAcorde(String linha) {
@@ -205,13 +214,13 @@ public class Musica {
      * @return the Tom
      */
     public String getTom() {
-        return this.Tom.getAcorde();
+        return this.Tom;
     }
 
     /**
      * @param Tom the Tom to set
      */
-    public void setTom(Acorde Tom) {
+    public void setTom(String Tom) {
         this.Tom = Tom;
     }
 

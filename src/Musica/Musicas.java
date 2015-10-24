@@ -81,7 +81,7 @@ public class Musicas {
 
     public void toArffFrequencia() throws IOException {
 
-        System.out.println("gerando arff de tom ...");
+        System.out.println("gerando arff de freq ...");
 
         ArquivoArff arff = new ArquivoArff("Frequencia");
 
@@ -98,12 +98,12 @@ public class Musicas {
             arff.addClasse(classe);
         }
         System.out.println("classes submetidas");
-        System.out.println(musicas.size());
         for (int i = 0; i < musicas.size(); i++) {
             Musica msc = musicas.get(i);
+            String classe = msc.getClasse();
+            
             ArrayList<Acorde> acordesFreq = msc.getAcordesFreq();
             ArrayList<String> dados = new ArrayList<>();
-
             String strAux = "";
             ArrayList<String> atr = arff.getAtributes();
             if (!acordesFreq.isEmpty()) {
@@ -123,11 +123,63 @@ public class Musicas {
                 for (int j = 0; j < atr.size(); j++) {
                     dados.add("0");
                 }
-                dados.add("alegria");
+                dados.add(classe);
             }
             arff.addDados(dados);
         }
 
-        arff.writeArff("/home/ricardo/Área de Trabalho/New/Frequencia.arff");
+        arff.writeArff("/home/ricardo/Área de Trabalho/New/frequencia.arff");
+    }
+    
+    public void toArffPresenca() throws IOException {
+
+        System.out.println("gerando arff de presença ...");
+
+        ArquivoArff arff = new ArquivoArff("Frequencia");
+
+        /*Cria os atributos do arquivo arff*/
+        for (int l = 0; l < acordes.length; l++) {
+            for (int k = 0; k < subAcordes.length; k++) {
+                arff.addAtribute((acordes[l] + subAcordes[k]));
+            }
+        }
+        System.out.println("atributos submetidos");
+
+        /*Adiciona as classes ao arquivo*/
+        for (String classe : classes) {
+            arff.addClasse(classe);
+        }
+        System.out.println("classes submetidas");
+        for (int i = 0; i < musicas.size(); i++) {
+            Musica msc = musicas.get(i);
+            String classe = msc.getClasse();
+            
+            ArrayList<Acorde> acordesFreq = msc.getAcordesFreq();
+            ArrayList<String> dados = new ArrayList<>();
+            String strAux = "";
+            ArrayList<String> atr = arff.getAtributes();
+            if (!acordesFreq.isEmpty()) {
+                for (int j = 0; j < atr.size(); j++) {
+                    for (int k = 0; k < acordesFreq.size(); k++) {
+                        if (atr.get(j).equals(acordesFreq.get(k).getAcorde()) && (!atr.get(j).equals(""))) {
+                            strAux = "1";
+                        } else {
+                            strAux = "0";
+                        }
+                    }
+                    dados.add(strAux);
+                    strAux = "0";
+                }
+                dados.add("alegria");
+            }else{
+                for (int j = 0; j < atr.size(); j++) {
+                    dados.add("0");
+                }
+                dados.add(classe);
+            }
+            arff.addDados(dados);
+        }
+
+        arff.writeArff("/home/ricardo/Área de Trabalho/New/presenca.arff");
     }
 }
