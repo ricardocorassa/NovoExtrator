@@ -22,14 +22,14 @@ import java.util.List;
 public class ArquivoArff {
 
     private String relations;
-    private ArrayList<String> atributes;
+    private ArrayList<String> attributes;
     private ArrayList<String> classe;
     private ArrayList<ArrayList<String>> dataList;
 
     public ArquivoArff(String relations) {
         this.relations = relations;
         classe = new ArrayList<String>();
-        atributes = new ArrayList<String>();
+        attributes = new ArrayList<String>();
         dataList = new ArrayList<ArrayList<String>>();
     }
 
@@ -38,7 +38,7 @@ public class ArquivoArff {
      */
     public void writeArff(String caminho) throws IOException {
 
-        if (this.relations == "" || this.atributes.isEmpty() || this.classe.isEmpty() || this.dataList.isEmpty()) {
+        if (this.relations == "" || this.attributes.isEmpty() || this.classe.isEmpty() || this.dataList.isEmpty()) {
             System.out.println("Arquivo incompleto");
         } else {
             BufferedWriter writer = new BufferedWriter(new FileWriter(caminho));
@@ -48,8 +48,8 @@ public class ArquivoArff {
             //System.out.println(relations);
 
             //escreve os atributos
-            for (int i = 0; i < atributes.size(); i++) {
-                writer.write("@ATTRIBUTE\t" + atributes.get(i) + "\tNUMERIC\n");
+            for (int i = 0; i < attributes.size(); i++) {
+                writer.write("@ATTRIBUTE\t" + attributes.get(i) + "\tNUMERIC\n");
             }
 
             //escreve a linha class
@@ -130,7 +130,7 @@ public class ArquivoArff {
      *adicionar atributos para o arquivo Arff
      */
     public void addAtribute(String atribute) {
-        this.atributes.add(atribute);
+        this.attributes.add(atribute);
     }
 
     /*
@@ -166,17 +166,17 @@ public class ArquivoArff {
     }
 
     /**
-     * @return the atributes
+     * @return the attributes
      */
     public ArrayList<String> getAtributes() {
-        return atributes;
+        return attributes;
     }
 
     /**
-     * @param atributes the atributes to set
+     * @param attributes the attributes to set
      */
-    public void setAtributes(ArrayList<String> atributes) {
-        this.atributes = atributes;
+    public void setAtributes(ArrayList<String> attributes) {
+        this.attributes = attributes;
     }
 
     /**
