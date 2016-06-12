@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Musicas {
 
     private ArrayList<Musica> musicas;
-    private ArrayList<String> atributes;
+    private ArrayList<String> attributes;
 
     public static String[] acordes = {"C", "D", "E", "F", "G", "A", "B"};
     public static String[] subAcordes = {"", "m", "#", "b", "4", "5", "7", "9", "º"};
